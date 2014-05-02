@@ -1,0 +1,99 @@
+/* Public Mapping Checker Custom Styles */
+
+body {
+    font-family: arial, sans-serif;
+    background-color: #fcf9f9;
+}
+
+h1, h2, h3, h4, h5, h6, .btn {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 0;
+    margin-bottom: 0;
+}
+
+h1 {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+h4.panel-title {
+    font-weight: bold;
+    font-family: arial, sans-serif;
+    font-size: 1em;
+}
+
+h4.panel-title a:hover {
+    text-decoration: none;
+}
+
+.container-fluid {
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+}
+
+a.helpinfo, a.helpinfo:hover {
+    cursor: pointer;
+}
+
+.alert p {
+    margin-bottom: 10px;
+}
+
+.alert .btn {
+    margin-bottom: 0;
+}
+
+.panel-group {
+    margin-bottom: 0;
+}
+
+.margintop {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.preview {
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.itemcard {
+    background-color: #fff;
+    padding: 20px;
+    width: 100%;
+    -webkit-box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    1px 1px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         1px 1px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+.itemcard h3 {
+    font-family: arial, sans-serif;
+    margin: 0 0 15px 0;
+}
+
+.itemcard  p {
+    margin-bottom: 20px;
+}
+
+.itemcard table {
+    margin-bottom: 0;
+}
+
+.geodata .table>tbody>tr>th, .table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+.geodata .table>thead {
+    font-family: 'Playfair Display';
+    font-size: 1.1em;
+}
+
+.geodata table table th {
+    padding-right: 20px;
+}
