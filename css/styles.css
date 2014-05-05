@@ -32,7 +32,7 @@ h4.panel-title a:hover {
 }
 
 .container-fluid {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto 40px auto;
 }
 
@@ -96,4 +96,25 @@ a.helpinfo, a.helpinfo:hover {
 
 .geodata table table th {
     padding-right: 20px;
+}
+
+.addpadding {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+iframe {
+    border: none;
+width: 100%;
+    padding: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.tab-pane {
+    background-color: #fff;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }

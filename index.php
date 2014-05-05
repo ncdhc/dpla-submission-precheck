@@ -21,14 +21,51 @@
     </head>
     <body>
         <?php
-        $provider = "North Carolina Digital Heritage Center"; // DPLA Service Hub Name
-        $oaibaseurl = "http://brevard.lib.unc.edu:8080/repox/OAIHandler"; // DPLA Service Hub Base URL
-        $metadataprefix = "MODS";
-        $harvestday = "15"; // Day of the month DPLA is scheduled to harvest
-        $dataprovider = isset($_GET['dataprovider']) ? $_GET['dataprovider'] : '';
-        $helpcontact = "Lisa Gregory";
-        $helpemail = "gregoryl@email.unc.edu";
-        $helpphone = "(919) 962-4839";
+       include('config.php');
+       
+       
+       function nextDate($userDay){      
+
+  $today = date('d'); // today
+
+  $target = date('Y-m-'.$userDay);  // target day
+
+  if($today <= $userDay){
+
+   $return = strtotime($target);
+
+  }
+  else{
+
+   $thisMonth = date('m') + 1;
+   $thisYear = date('Y');
+
+   if($userDay >= 28 && $thisMonth == 2){
+       $userDay = 28;
+   }
+
+
+   while(!checkdate($thisMonth,$userDay,$thisYear)){
+
+     $thisMonth++;
+
+     if($thisMonth == 13){
+
+       $thisMonth = 1;
+       $thisYear++;
+
+     }
+
+   }      
+
+   $return = strtotime($thisYear.'-'.$thisMonth.'-'.$userDay);
+
+  }
+
+  return $return; 
+
+}
+
 
         function getSets($rt) {
             global $oaibaseurl;
@@ -90,7 +127,7 @@
         ?>
 
         <div class="container-fluid">
-            <div class="row">
+            <div class="row addpadding">
                 <div class="col-md-12">
                     <h3 class="text-muted"><em><?php echo $provider; ?></em></h3>
                     <h1>DPLA Submission Pre&middot;Check</h1>
@@ -118,7 +155,7 @@
 
                             <div class="alert alert-warning">
 
-                                <p><span class="glyphicon glyphicon-info-sign"></span> The next DPLA Harvest is scheduled for <strong>Wednesday, May 14, 2014</strong>.</p>
+                                <p><span class="glyphicon glyphicon-info-sign"></span> The next DPLA Harvest is scheduled for <strong><?php echo date('l, F j, Y',nextDate($harvestday));?></strong>.</p>
 
 
                                 <form class="form-inline">
@@ -166,7 +203,7 @@
                         </div>
 
 
-                        <div class="row">
+                        <div class="row addpadding">
                             <div class="col-md-12">
                                 <?php
                                 $setname = $prettysetarray[$set];
@@ -365,197 +402,42 @@
                                 <?php if(empty($adate)&&empty($ageo)&&empty($athumburl)&&empty($atype)) { ?>
                                 
                                 <h4 class="text-muted"><em>Records are complete. No missing data!</em></h4>
-                                <?php } ?>
+<?php } } } } ?>
 
                             </div>
+                            
+                            
                         </div>
-                        <hr>
-                        
-                        
-                        
-                        <?php
-                        // get a random item id from the first page of OAI ListIdentifiers response and use 
-                        // that record to populate sample record display
-                        
-                        $listidurl = $oaibaseurl."?verb=ListIdentifiers&set=".$set."&metadataPrefix=".$metadataprefix;
-                         // create curl resource
-                        $ch = curl_init();
-
-                        // set url
-                        curl_setopt($ch, CURLOPT_URL, $listidurl);
-
-                        //return the transfer as a string
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-                        // $output contains the output string
-                        $idoutput = curl_exec($ch);
-
-                        // close curl resource to free up system resources
-                        curl_close($ch);
-
-                        $idarray = simplexml_load_string($idoutput);
-                        $idmaxnum = count($idarray->ListIdentifiers->header);
-                        $idrandnum = rand(0,$idmaxnum);
-                        $sampleid = $idarray->ListIdentifiers->header[$idrandnum]->identifier;
-
-                        
-                        $sampleurl = $oaibaseurl."?verb=GetRecord&identifier=".$sampleid."&metadataPrefix=".$metadataprefix;
-                         // create curl resource
-                        $ch = curl_init();
-
-                        // set url
-                        curl_setopt($ch, CURLOPT_URL, $sampleurl);
-
-                        //return the transfer as a string
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-                        // $output contains the output string
-                        $sampleoutput = curl_exec($ch);
-
-                        // close curl resource to free up system resources
-                        curl_close($ch);
-                        
-                        
-                        try {
-                            $samplexml = new SimpleXMLElement($sampleoutput);
-                        } catch (Exception $e) {
-
-                        }
-
-                       
-                            $samplexsl = new DOMDocument;
-                            $samplexslpath = 'xsl/samplerecord.xsl';
-                            $samplexsl->load($samplexslpath);
-                            $sampleproc = new XSLTProcessor;
-                            $sampleproc->importStylesheet($samplexsl);
-
-
-                            $sampleresult = trim($sampleproc->transformToXML($samplexml));
-
-                       
-                        $samplearray = simplexml_load_string($sampleresult);
-            
-
-                        
-                        $oai_id = isset($samplearray->oai_id) ? $samplearray->oai_id : '';
-                        $title = isset($samplearray->title) ? $samplearray->title : '';
-                        $url = isset($samplearray->url) ? $samplearray->url : '';
-                        $thumburl = isset($samplearray->thumburl) ? $samplearray->thumburl : '';
-                        $rights = isset($samplearray->rights) ? $samplearray->rights : '';
-                        $type = isset($samplearray->type) ? $samplearray->type : '';
-                        $description = isset($samplearray->description) ? $samplearray->description : '';
-                        $contributing_institution = isset($samplearray->contributing_institution) ? $samplearray->contributing_institution : '';
-                        $creator = isset($samplearray->creator->data) ? (array) $samplearray->creator->data : array();
-                        $date = isset($samplearray->date->data) ? (array) $samplearray->date->data : array();
-                        $publisher = isset($samplearray->publisher->data) ? (array) $samplearray->publisher->data : array();
-                        $location = isset($samplearray->location->data) ? (array) $samplearray->location->data : array();
-                        $subject = isset($samplearray->subject->data) ? (array) $samplearray->subject->data : array();
-                        
-
-            
-                        ?>
-                        
-                        
-                        
-                        
-                        
-                        <div class="row">
-                            <div class="col-md-6"><h2>Sample Record 
-                                    <span class="small">
-                                        <a class="helpinfo" data-toggle="popover" data-content="This is an example of how your content will appear on the DPLA's web site.">
-                                            <span class="glyphicon glyphicon-question-sign"></span>
-                                        </a>
-                                    </span>
-                                </h2></div>
-                            <div class="col-md-6"><a class="margintop btn btn-default pull-right" onclick="window.location.replace(window.location.href);">Load Another Record</a></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="itemcard">
-                                    <h3><?php echo $title;?></h3>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <img class="img-responsive preview" src="<?php echo $thumburl;?>"/>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr><th>Creator</th><td><?php foreach( $creator as $singlecreator) { echo $singlecreator."<br/>"; };?></td></tr>
-                                                        <tr><th>Created Date</th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>
-                                                        <tr><th>Partner</th><td><?php echo $provider;?></td></tr>
-                                                        <tr><th>Contributing Institution</th><td><?php echo $contributing_institution;?></td></tr>
-                                                        <tr><th>Publisher</th><td><?php foreach( $publisher as $singlepub) { echo $singlepub."<br/>"; };?></td></tr>
-                                                        <tr><th>Description</th><td><?php echo $description;?></td></tr>
-                                                        <tr><th>Location</th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
-                                                        <tr><th>Type</th><td><?php echo $type;?></td></tr>
-                                                        <tr><th>Subject</th><td><?php foreach( $subject as $singlesub) { echo $singlesub."<br/>"; };?></td></tr>
-                                                        <tr><th>Rights</th><td><?php echo $rights;?></td></tr>
-                                                        <tr><th>URL</th><td><a href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                          
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2>Geographic Data
-                                    <span class="small">
-                                        <a class="helpinfo" data-toggle="popover" data-content="This section shows how the DPLA will parse the geographic information supplied for this record.">
-                                            <span class="glyphicon glyphicon-question-sign"></span>
-                                        </a>
-                                    </span>
-                                </h2>
-                                <div class="geodata itemcard">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr><th>Your Data</th><th></th><th>DPLA-parsed Spatial Data</th></tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach($location as $georow) { ?>
-                                                <tr><th><?php echo $georow;?></th><td><em class="text-muted">becomes</em></td><td>
-
-                                                        <table>
-                                                            <tr><th>Display Name</th><td>Davidson County (N.C.)</td></tr>
-                                                            <tr><th>Country*</th><td>United States</td></tr>
-                                                            <tr><th>State*</th><td>North Carolina</td></tr>
-                                                            <tr><th>County*</th><td>Davidson County</td></tr>
-                                                            <tr><th>City*</th><td></td></tr>
-                                                            <tr><th>Coordinates*</th><td>35.793170929, -80.2127532959</td></tr>
-                                                        </table>
-
-                                                    </td></tr>
-                                                <?php } ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <hr>
-                                    <p><em class="text-muted">* These values are used by <a href="http://dp.la/info/developers/codex/">DPLA API projects</a> and <a href="http://dp.la/map">DPLA's "Explore by Map" interface</a>.</em></p> 
-
-                                </div>
-        <?php }
-    }
-} ?>
-                                <hr>
-                                <p class='text-muted'>Questions? Email <a href='mailto:<?php echo $helpemail;?>'><?php echo $helpcontact;?></a> or call <?php echo $helpphone;?>.</p>
+            <div class="row addpadding">
+                <div class="col-md-12">
+                <hr>
                 </div>
             </div>
+                        
+                        <iframe scrolling="no" id="samplerecordframe" src="samplerecord.php?dataprovider=<?php echo $dataprovider;?>&set=<?php echo $set;?>"></iframe>
+ 
+                        <div class="row addpadding">
+                            <div class="col-md-12">
+                                <hr>
+                                <p class='text-muted'>Questions? Email <a href='mailto:<?php echo $helpemail;?>'><?php echo $helpcontact;?></a> or call <?php echo $helpphone;?>.</p>
+                            </div>
         </div>
+        </div>
+ 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
         <script type='text/javascript'>
+            // trigger bootstrap help text popups
             $('.helpinfo').popover({
                 trigger: 'hover',
                 placement: 'right',
                 container: 'body'
+            });
+            // resize iframe to fit content
+            $("#samplerecordframe").load(function() {
+                $(this).height( $(this).contents().find("body").height() );
             });
         </script>
     </body>

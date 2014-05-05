@@ -3,9 +3,8 @@
     xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:mods="http://www.loc.gov/mods/v3">
     <xsl:output method="html"/>
     <xsl:template match="/">
-
-            <xsl:variable name="count" select="1"/>
-            <xsl:for-each select="//oai:record">
+      
+            <xsl:for-each select="//oai:record[oai:header[not(@status='deleted')]]">
                 <xsl:variable name="geo"
                     select="normalize-space(.//mods:mods/mods:subject/mods:geographic[1])"/>
                 <xsl:variable name="date"
@@ -38,7 +37,6 @@
                     </record>
                 </xsl:if>
             </xsl:for-each>
-
 
     </xsl:template>
 </xsl:stylesheet>
