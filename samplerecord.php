@@ -30,11 +30,8 @@
           $set = isset($_GET['set']) ? $_GET['set'] : '';
           
           if(empty($set)){
-             ?>
-              <div class="alert alert-danger"><span class="glyphicon glyphicon-info-sign"></span><strong> No valid Data Set Provided.</strong></div>
-              
-              
-          <?php } else {
+              // do nothing
+          } else {
           
                         // get a random item id from the first page of OAI ListIdentifiers response and use 
                         // that record to populate sample record display
