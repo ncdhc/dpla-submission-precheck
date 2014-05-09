@@ -151,48 +151,48 @@
                                             <div class="table-responsive">
                                                 <table class="table">
                                                     <tbody>
-                                                        <?php if(!isset($creator)) { ?>
+                                                        <?php if(!is_null($creator)) { ?>
                                                         <tr><th>Creator</th><td><?php foreach( $creator as $singlecreator) { echo $singlecreator."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($date)) { ?>
+                                                        <?php if(!is_null($date)) { ?>
                                                         <!--<tr><th>Created Date</th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>-->
                                                         <tr><th>Created Date</th><td><?php echo $postprocdate;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($provider)) { ?>
+                                                        <?php if(!is_null($provider)) { ?>
                                                         <tr><th>Partner</th><td><?php echo $provider;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($contributing_institution)) { ?>
+                                                        <?php if(!is_null($contributing_institution)) { ?>
                                                         <tr><th>Contributing Institution</th><td><?php echo $contributing_institution;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($publisher)) { ?>
+                                                        <?php if(!is_null($publisher)) { ?>
                                                         <tr><th>Publisher</th><td><?php foreach( $publisher as $singlepub) { echo $singlepub."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($description)) { ?>
+                                                        <?php if(!is_null($description)) { ?>
                                                         <tr><th>Description</th><td><?php echo $description;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($location)) { ?>
+                                                        <?php if(!is_null($location)) { ?>
                                                         <tr><th>Location</th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($type)) { ?>
+                                                        <?php if(!is_null($type)) { ?>
                                                         <tr><th>Type</th><td><?php echo $type;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($subject)) { ?>
+                                                        <?php if(!is_null($subject)) { ?>
                                                         <tr><th>Subject</th><td><?php foreach( $subject as $singlesub) { echo $singlesub."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($rights)) { ?>
+                                                        <?php if(!is_null($rights)) { ?>
                                                         <tr><th>Rights</th><td><?php echo $rights;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if(!isset($url)) { ?>
+                                                        <?php if(!is_null($url)) { ?>
                                                         <tr><th>URL</th><td><a href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
                                                         <?php } ?>
                                                         
