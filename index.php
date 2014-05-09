@@ -408,6 +408,8 @@
                             
                             
                         </div>
+            
+            <?php if(!empty($set)) { ?>
             <div class="row addpadding">
                 <div class="col-md-12">
                 <hr>
@@ -415,7 +417,7 @@
             </div>
                         
                         <iframe scrolling="no" id="samplerecordframe" src="samplerecord.php?dataprovider=<?php echo $dataprovider;?>&set=<?php echo $set;?>"></iframe>
- 
+            <?php } ?>
                         <div class="row addpadding">
                             <div class="col-md-12">
                                 <hr>
