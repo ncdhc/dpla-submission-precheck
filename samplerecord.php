@@ -152,8 +152,9 @@
                                             <div class="table-responsive">
                                                 <table class="table">
                                                     <tbody>
-                                                        <?php if(!empty($creator)) { ?>
+                                                         <?php if(!empty($creator)) { ?>
                                                         <tr><th>Creator</th><td><?php foreach( $creator as $singlecreator) { echo $singlecreator."<br/>"; };?></td></tr>
+
                                                         <?php } ?>
                                                         
                                                         <?php if(!empty($date)) { ?>
@@ -161,11 +162,11 @@
                                                         <tr><th>Created Date</th><td><?php echo $postprocdate;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($provider!=='')) { ?>
+                                                        <?php if($provider!=='') { ?>
                                                         <tr><th>Partner</th><td><?php echo $provider;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($contributing_institution!=='') { ?>
+                                                        <?php if((string) $contributing_institution!=='') { ?>
                                                         <tr><th>Contributing Institution</th><td><?php echo $contributing_institution;?></td></tr>
                                                         <?php } ?>
                                                         
@@ -173,7 +174,7 @@
                                                         <tr><th>Publisher</th><td><?php foreach( $publisher as $singlepub) { echo $singlepub."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($description!=='') { ?>
+                                                        <?php if((string) $description!=='') { ?>
                                                         <tr><th>Description</th><td><?php echo $description;?></td></tr>
                                                         <?php } ?>
                                                         
@@ -181,7 +182,7 @@
                                                         <tr><th>Location</th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($type!=='') { ?>
+                                                        <?php if((string) $type!=='') { ?>
                                                         <tr><th>Type</th><td><?php echo $type;?></td></tr>
                                                         <?php } ?>
                                                         
@@ -189,14 +190,13 @@
                                                         <tr><th>Subject</th><td><?php foreach( $subject as $singlesub) { echo $singlesub."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($rights!=='') { ?>
+                                                        <?php if((string) $rights!=='') { ?>
                                                         <tr><th>Rights</th><td><?php echo $rights;?></td></tr>
                                                         <?php } ?>
                                                         
-                                                        <?php if($url!=='') { ?>
+                                                        <?php if((string) $url!=='') { ?>
                                                         <tr><th>URL</th><td><a href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
                                                         <?php } ?>
-                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
