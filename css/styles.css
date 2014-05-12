@@ -85,6 +85,10 @@ a.helpinfo, a.helpinfo:hover {
     margin-bottom: 0;
 }
 
+.itemcard .table>tbody>tr>th {
+    min-width: 130px;
+}
+
 .geodata .table>tbody>tr>th, .table>tbody>tr>td {
     vertical-align: middle;
 }
@@ -96,6 +100,7 @@ a.helpinfo, a.helpinfo:hover {
 
 .geodata table table th {
     padding-right: 20px;
+    min-width: 150px;
 }
 
 .addpadding {
@@ -105,7 +110,7 @@ a.helpinfo, a.helpinfo:hover {
 
 iframe {
     border: none;
-width: 100%;
+    width: 100%;
     padding: 0;
     overflow-y: hidden;
     overflow-x: hidden;

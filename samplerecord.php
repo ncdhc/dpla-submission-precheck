@@ -24,111 +24,140 @@
         <div class="container-fluid">
         
           <?php
-          
+          // include application-wide config information
           include('config.php');
           
+          // make sure set information is present
           $set = isset($_GET['set']) ? $_GET['set'] : '';
           
           if(empty($set)){
               // do nothing
           } else {
           
-                        // get a random item id from the first page of OAI ListIdentifiers response and use 
-                        // that record to populate sample record display
-                        
-                        $listidurl = $oaibaseurl."?verb=ListIdentifiers&set=".$set."&metadataPrefix=".$metadataprefix;
-                         // create curl resource
-                        $ch = curl_init();
 
-                        // set url
-                        curl_setopt($ch, CURLOPT_URL, $listidurl);
+            $listidurl = $oaibaseurl."?verb=ListIdentifiers&set=".$set."&metadataPrefix=".$metadataprefix;
+            $idarray = '';
 
-                        //return the transfer as a string
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            function getIdList($url) {
+                // establish function to get this set's oai IDs
+                global $idarray;
+                global $oaibaseurl;
 
-                        // $output contains the output string
-                        $idoutput = curl_exec($ch);
+                // create curl resource
+                $ch = curl_init();
 
-                        // close curl resource to free up system resources
-                        curl_close($ch);
+                // set url
+                curl_setopt($ch, CURLOPT_URL, $url);
 
-                        $idarray = simplexml_load_string($idoutput);
-                        $idmaxnum = count($idarray->ListIdentifiers->header)-1;
-                        $idrandnum = rand(0,$idmaxnum);
-                        $sampleid = $idarray->ListIdentifiers->header[$idrandnum]->identifier;
-                        
-                        
-                        $sampleurl = $oaibaseurl."?verb=GetRecord&identifier=".$sampleid."&metadataPrefix=".$metadataprefix;
-                         // create curl resource
-                        $ch = curl_init();
+                //return the transfer as a string
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-                        // set url
-                        curl_setopt($ch, CURLOPT_URL, $sampleurl);
+                // $output contains the output string
+                $idoutput = curl_exec($ch);
 
-                        //return the transfer as a string
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                // close curl resource to free up system resources
+                curl_close($ch);
 
-                        // $output contains the output string
-                        $sampleoutput = curl_exec($ch);
 
-                        // close curl resource to free up system resources
-                        curl_close($ch);
-                        
-                        
-                        try {
-                            $samplexml = new SimpleXMLElement($sampleoutput);
-                        } catch (Exception $e) {
+                try {
+                    $pagexml = new SimpleXMLElement($idoutput);
+                } catch (Exception $e) {
 
+                }
+
+                if(isset($pagexml->ListIdentifiers)){
+
+                    // write all identifiers that do not have status markers to an array
+                    foreach($pagexml->ListIdentifiers->header as $identry){
+                        if(!isset($identry['status'])){
+                            $idarray[] = (string) $identry->identifier;
                         }
 
-                       
-                            $samplexsl = new DOMDocument;
-                            $samplexslpath = 'xsl/samplerecord.xsl';
-                            $samplexsl->load($samplexslpath);
-                            $sampleproc = new XSLTProcessor;
-                            $sampleproc->importStylesheet($samplexsl);
+                    }
 
+                    // if a resumption token is set loop through the next page of results
+                    if (isset($pagexml->ListIdentifiers->resumptionToken)) {
+                    $nextlistidurl = $oaibaseurl . "?verb=ListIdentifiers&resumptionToken=" . $pagexml->ListIdentifiers->resumptionToken;
+                    getIdList($nextlistidurl);
+                    }
 
-                            $sampleresult = trim($sampleproc->transformToXML($samplexml));
+                    }
+            }
 
-                       
-                        $samplearray = simplexml_load_string($sampleresult);
+            getIdList($listidurl);
 
+            // get a random id from the list of ids
+            $idmaxnum = count($idarray)-1;
+            $idrandnum = rand(0,$idmaxnum);
+            $sampleid = $idarray[$idrandnum];
 
-                        
-                        $oai_id = isset($samplearray->oai_id) ? $samplearray->oai_id : '';
-                        $title = isset($samplearray->title) ? $samplearray->title : '';
-                        $url = isset($samplearray->url) ? $samplearray->url : '';
-                        $thumburl = !empty($samplearray->thumburl) ? $samplearray->thumburl : 'img/thumbnail.png';
-                        $rights = isset($samplearray->rights) ? $samplearray->rights : '';
-                        $type = isset($samplearray->type) ? $samplearray->type : '';
-                        $description = isset($samplearray->description) ? $samplearray->description : '';
-                        $contributing_institution = isset($samplearray->contributing_institution) ? $samplearray->contributing_institution : '';
-                        
-                        $creator = isset($samplearray->creator->data) ? $samplearray->creator->data : array();
-                        $date = isset($samplearray->date->data) ? $samplearray->date->data : array();
-                        $publisher = isset($samplearray->publisher->data) ? $samplearray->publisher->data : array();
-                        $location = isset($samplearray->location->data) ? $samplearray->location->data : array();
-                        $subject = isset($samplearray->subject->data) ? $samplearray->subject->data : array();
-                        
-                        $datearray=array();
-                        foreach($date as $singledate){
-                            $datearray[] = (string)$singledate;
-                        }
-                        if(!empty($datearray)){
-                        if(count($datearray)>1){
-                            $mindate = min($datearray);
-                            $maxdate = max($datearray);
-                            $postprocdate = $mindate."-".$maxdate;
-                        } else {
-                            $postprocdate = $datearray[0];
-                        }
-                        } else {
-                            $postprocdate = '';
-                        }
+            // fetch that id's record to output as a sample
+            $sampleurl = $oaibaseurl."?verb=GetRecord&identifier=".$sampleid."&metadataPrefix=".$metadataprefix;
+             // create curl resource
+            $ch = curl_init();
 
-            
-                       
+            // set url
+            curl_setopt($ch, CURLOPT_URL, $sampleurl);
+
+            //return the transfer as a string
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+            // $output contains the output string
+            $sampleoutput = curl_exec($ch);
+
+            // close curl resource to free up system resources
+            curl_close($ch);
+
+            try {
+                $samplexml = new SimpleXMLElement($sampleoutput);
+            } catch (Exception $e) {
+            }
+
+            // transform the sample record to make data easier to address
+            $samplexsl = new DOMDocument;
+            $samplexslpath = 'xsl/samplerecord.xsl';
+            $samplexsl->load($samplexslpath);
+            $sampleproc = new XSLTProcessor;
+            $sampleproc->importStylesheet($samplexsl);
+
+            $sampleresult = trim($sampleproc->transformToXML($samplexml));
+
+            $samplearray= simplexml_load_string($sampleresult);
+
+            // vars with one value
+            $oai_id = isset($samplearray->oai_id) ? $samplearray->oai_id : '';
+            $title = isset($samplearray->title) ? $samplearray->title : '';
+            $url = isset($samplearray->url) ? $samplearray->url : '';
+            $thumburl = !empty($samplearray->thumburl) ? $samplearray->thumburl : 'img/thumbnail.png';
+            $rights = isset($samplearray->rights) ? $samplearray->rights : '';
+            $type = isset($samplearray->type) ? $samplearray->type : '';
+            $description = isset($samplearray->description) ? $samplearray->description : '';
+            $contributing_institution = isset($samplearray->contributing_institution) ? $samplearray->contributing_institution : '';
+
+            // vars with multiple values, potentially
+            $creator = isset($samplearray->creator->data) ? $samplearray->creator->data : array();
+            $date = isset($samplearray->date->data) ? $samplearray->date->data : array();
+            $publisher = isset($samplearray->publisher->data) ? $samplearray->publisher->data : array();
+            $location = isset($samplearray->location->data) ? $samplearray->location->data : array();
+            $subject = isset($samplearray->subject->data) ? $samplearray->subject->data : array();
+
+            // attempt to post-process date information like DPLA does
+            $datearray=array();
+            foreach($date as $singledate){
+                $datearray[] = (string)$singledate;
+            }
+            if(!empty($datearray)){
+            if(count($datearray)>1){
+                $mindate = min($datearray);
+                $maxdate = max($datearray);
+                $postprocdate = $mindate."-".$maxdate;
+            } else {
+                $postprocdate = $datearray[0];
+            }
+            } else {
+                $postprocdate = '';
+            }
+           
         ?>
                         <div class="row">
                             <div class="col-md-6"><h2>Sample Record 
@@ -159,7 +188,9 @@
                                                         
                                                         <?php if(!empty($date)) { ?>
                                                         <!--<tr><th>Created Date</th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>-->
-                                                        <tr><th>Created Date</th><td><?php echo $postprocdate;?></td></tr>
+                                                        <tr><th>Created Date  <a class="helpinfo text-muted" data-toggle="popover" data-content="The DPLA will attempt to normalize dates as records are harvested.">
+                                            <span class="glyphicon glyphicon-question-sign"></span>
+                                        </a></th><td><?php echo $postprocdate;?></td></tr>
                                                         <?php } ?>
                                                         
                                                         <?php if($provider!=='') { ?>
@@ -179,7 +210,9 @@
                                                         <?php } ?>
                                                         
                                                         <?php if(!empty($location)) { ?>
-                                                        <tr><th>Location</th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
+                                                        <tr><th>Location  <a class="helpinfo text-muted" data-toggle="popover" data-content="The DPLA will attempt to normalize/geocode locations as records are harvested.">
+                                            <span class="glyphicon glyphicon-question-sign"></span>
+                                        </a></th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
                                                         <?php if((string) $type!=='') { ?>
@@ -195,7 +228,7 @@
                                                         <?php } ?>
                                                         
                                                         <?php if((string) $url!=='') { ?>
-                                                        <tr><th>URL</th><td><a href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
+                                                        <tr><th>URL</th><td><a target="_blank" href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
                                                         <?php } ?>
                                                     </tbody>
                                                 </table>
@@ -223,7 +256,11 @@
                                                 <tr><th>Your Data</th><th></th><th>DPLA-parsed Spatial Data</th></tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach($location as $georow) { 
+                                                <?php 
+                                                
+                                                // attempt to post-process location data like DPLA does
+                                                
+                                                foreach($location as $georow) { 
                                                     
                                                     $bingapiurl = "http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&q=".rawurlencode($georow)."?maxRes=1&incl=queryParse&key=$bingapikey";
                                                     // create curl resource
@@ -240,19 +277,11 @@
 
                                                     // close curl resource to free up system resources
                                                     curl_close($bch);
-                                                    
-                                                    
+                                                                                                      
                                                     $bingapiarray = json_decode($bingapioutput);
-                                                    
-                                                    //echo $bingapiurl;
-                                                    //print_r($bingapiarray);
-                                                    
-                                                    
+         
                                                     ?>
-                                                
-                                                
-                                                
-                                                
+      
                                                 <tr><th><?php echo $georow;?></th><td><em class="text-muted">becomes</em></td><td>
 
                                                         <table>
@@ -263,21 +292,19 @@
                                                             <tr><th>City*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->address->locality) ? $bingapiarray->resourceSets[0]->resources[0]->address->locality : '';?></td></tr>
                                                             <tr><th>Coordinates*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates) ? $bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates[0].", ".$bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates[1] : '';?></td></tr>
                                                         </table>
-                                                        <a href="<?php echo $bingapiurl;?>"><?php echo $bingapiurl;?></a>
-                                                    </td></tr>
+                                                        
+                                                    </td><td><a class="btn btn-sm btn-default" href="<?php echo $bingapiurl;?>" target="_blank">Bing API URL</a></td></tr>
                                                 <?php } ?>
                                             </tbody>
                                         </table>
                                     </div>
                                     <hr>
                                     <p><em class="text-muted">* These values are used by <a href="http://dp.la/info/developers/codex/">DPLA API projects</a> and <a href="http://dp.la/map">DPLA's "Explore by Map" interface</a>.</em></p> 
-
                                 </div>
-
                               
                 </div>
             </div>
-          <?php } ?>
+          <?php    } ?>
         </div>
         <br/>
                          <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
