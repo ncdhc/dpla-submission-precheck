@@ -228,7 +228,9 @@
                                                         <?php } ?>
                                                         
                                                         <?php if((string) $url!=='') { ?>
-                                                        <tr><th>URL</th><td><a target="_blank" href="<?php echo $url;?>"><?php echo $url;?></a></td></tr>
+                                                        <tr><th>URL</th><td><a target="_blank" href="<?php echo $url;?>"><?php echo $url;?></a> 
+                                                       <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $sampleid;?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                                         </td></tr>
                                                         <?php } ?>
                                                     </tbody>
                                                 </table>
