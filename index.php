@@ -296,7 +296,7 @@
 
                                             <li>
                                                 <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
-                                                <a class="oailink" data-toggle="modal" data-remote="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>" data-target="#modal"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                                <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
 
                                         <?php } ?> 
@@ -326,7 +326,7 @@
 
                                             <li>
                                                 <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
-                                                <a class="oailink" data-toggle="modal" data-remote="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>" data-target="#modal"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                                <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
                                             
                                              <?php } ?> 
@@ -354,7 +354,7 @@
 
                                            <li>
                                                 <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
-                                                <a class="oailink" data-toggle="modal" data-remote="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>" data-target="#modal"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                                <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
                                             <?php } ?> 
                                     </ul>
@@ -381,7 +381,7 @@
 
                                             <li>
                                                 <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
-                                                <a class="oailink" data-toggle="modal" data-remote="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>" data-target="#modal"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                                <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
                                             <?php } ?> 
                                     </ul>
@@ -417,12 +417,7 @@
             </div>
         </div>
     </div>
-        <div class="modal" id="modal">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                </div>
-            </div>
-        </div>
+       
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
