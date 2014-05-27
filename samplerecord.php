@@ -140,23 +140,6 @@
             $publisher = isset($samplearray->publisher->data) ? $samplearray->publisher->data : array();
             $location = isset($samplearray->location->data) ? $samplearray->location->data : array();
             $subject = isset($samplearray->subject->data) ? $samplearray->subject->data : array();
-
-            // attempt to post-process date information like DPLA does
-            $datearray=array();
-            foreach($date as $singledate){
-                $datearray[] = (string)$singledate;
-            }
-            if(!empty($datearray)){
-            if(count($datearray)>1){
-                $mindate = min($datearray);
-                $maxdate = max($datearray);
-                $postprocdate = $mindate."-".$maxdate;
-            } else {
-                $postprocdate = $datearray[0];
-            }
-            } else {
-                $postprocdate = '';
-            }
            
         ?>
                         <div class="row">
@@ -241,71 +224,6 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2>Geographic Data
-                                    <span class="small">
-                                        <a class="helpinfo" data-toggle="popover" data-content="This section shows how the DPLA will parse the geographic information supplied for this record.">
-                                            <span class="glyphicon glyphicon-question-sign"></span>
-                                        </a>
-                                    </span>
-                                </h2>
-                                <div class="geodata itemcard">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr><th>Your Data</th><th></th><th>DPLA-parsed Spatial Data</th></tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php 
-                                                
-                                                // attempt to post-process location data like DPLA does
-                                                
-                                                foreach($location as $georow) { 
-                                                    
-                                                    $bingapiurl = "http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&q=".rawurlencode($georow)."?maxRes=1&incl=queryParse&key=$bingapikey";
-                                                    // create curl resource
-                                                    $bch = curl_init();
-
-                                                    // set url
-                                                    curl_setopt($bch, CURLOPT_URL, $bingapiurl);
-
-                                                    //return the transfer as a string
-                                                    curl_setopt($bch, CURLOPT_RETURNTRANSFER, 1);
-
-                                                    // $output contains the output string
-                                                    $bingapioutput = curl_exec($bch);
-
-                                                    // close curl resource to free up system resources
-                                                    curl_close($bch);
-                                                                                                      
-                                                    $bingapiarray = json_decode($bingapioutput);
-         
-                                                    ?>
-      
-                                                <tr><th><?php echo $georow;?></th><td><em class="text-muted">becomes</em></td><td>
-
-                                                        <table>
-                                                            <tr><th>Display Name</th><td><?php echo $georow;?></td></tr>
-                                                            <tr><th>Country*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->address->countryRegion) ? $bingapiarray->resourceSets[0]->resources[0]->address->countryRegion : '';?></td></tr>
-                                                            <tr><th>State*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->address->adminDistrict) ? $bingapiarray->resourceSets[0]->resources[0]->address->adminDistrict : '';?></td></tr>
-                                                            <tr><th>County*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->address->adminDistrict2) ? $bingapiarray->resourceSets[0]->resources[0]->address->adminDistrict2 : '';?></td></tr>
-                                                            <tr><th>City*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->address->locality) ? $bingapiarray->resourceSets[0]->resources[0]->address->locality : '';?></td></tr>
-                                                            <tr><th>Coordinates*</th><td><?php echo isset($bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates) ? $bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates[0].", ".$bingapiarray->resourceSets[0]->resources[0]->geoCodePoints[0]->coordinates[1] : '';?></td></tr>
-                                                        </table>
-                                                        
-                                                    </td><td><a class="btn btn-sm btn-default" href="<?php echo $bingapiurl;?>" target="_blank">Bing API URL</a></td></tr>
-                                                <?php } ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <hr>
-                                    <p><em class="text-muted">* These values are used by <a href="http://dp.la/info/developers/codex/">DPLA API projects</a> and <a href="http://dp.la/map">DPLA's "Explore by Map" interface</a>.</em></p> 
-                                </div>
-                              
-                </div>
-            </div>
           <?php    } ?>
         </div>
         <br/>
