@@ -1,7 +1,7 @@
-NCDHC DPLA Submission Pre-Check
-===============================
+DPLA Submission Pre-Check
+=========================
 
-These tools are intended for use by NCDHC partners as a means to preview their content after the NCDHC has normalized it for submission to the DPLA.
+These tools are intended for use by a Service Hub's partners as a means to preview their content after the Hub has normalized it for submission to the DPLA.
 
 The preview mirrors, as closely as possible, the actual output of harvested content on the DPLA's website <http://dp.la>
 
@@ -14,19 +14,44 @@ Version
 Technology
 ----------
 
-The NCDHC DPLA Submission Pre-Check requires the following to function properly:
+The DPLA Submission Pre-Check tool requires the following to function properly:
   - PHP 5 or higher
   - libxml extension (enabled in PHP 5 by default)
   - php_curl extension
   - php_xsl extension
 
+In addition, the following will need to be provided in the included config.php file:
+  - provider name
+  - provider OAI base URL
+  - the metadata prefix of the records harvested by the DPLA
+    -  if this is anything other than NCDHC-mapped MODS, new "analysis" and "samplerecord" XSL stylesheets will be required
+  - a help contact name
+  - a help contact email
+  - a help contact phone number
+
+This tool is built with Bootstrap 3.1.1 and Bootstrap Theme, included in this release.
+
 Installation
 ------------
+
+This tool assumes that the data set specifications in your repository follow a partner-specific naming convention:
+
+```sh
+somecode_setname
+```
+
+i.e.,
+
+```sh
+ncdhc_postcards
+```
+
+The partner-specific code in front of the set name (in the above examples, "somecode" or "ncdhc") is required to begin using this tool.
 
 Unzip files into a web-accessible directory or local evironment. Visit:
 
 ```sh
-http://[path_to_your_directory]/index.php
+http://[path_to_your_directory]/index.php?dataprovider=somecode
 ```
 
 License
