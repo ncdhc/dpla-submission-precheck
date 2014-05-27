@@ -5,6 +5,8 @@ These tools are intended for use by a Service Hub's partners as a means to previ
 
 The preview mirrors, as closely as possible, the actual output of harvested content on the DPLA's website <http://dp.la>
 
+Included is an OAI proxy viewer. This is useful if the repository itself is closed to the public; as long as interactions from the server where this tool resides is allowed by the server hosting the repository, this will allow outside users to view single OAI records as a means of troubleshooting.
+
 
 Version
 -------
