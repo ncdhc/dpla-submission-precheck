@@ -172,8 +172,8 @@
                                                         <?php if(!empty($date)) { ?>
                                                         <!--<tr><th>Created Date</th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>-->
                                                         <tr><th>Created Date  <a class="helpinfo text-muted" data-toggle="popover" data-content="The DPLA will attempt to normalize dates as records are harvested.">
-                                            <span class="glyphicon glyphicon-question-sign"></span>
-                                        </a></th><td><?php echo $postprocdate;?></td></tr>
+                                                        <span class="glyphicon glyphicon-question-sign"></span>
+                                                        </a></th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>
                                                         <?php } ?>
                                                         
                                                         <?php if($provider!=='') { ?>
