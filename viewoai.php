@@ -126,7 +126,7 @@
                    
                         <!-- Tab panes -->
                         <div class="tab-content">
-                          <div class="tab-pane active" id="#<?php echo $metadataprefix;?>">
+                          <div class="tab-pane active" id="<?php echo $metadataprefix;?>">
                          <?php
                           
 
