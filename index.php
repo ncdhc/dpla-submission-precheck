@@ -413,7 +413,8 @@
         <div class="row addpadding">
             <div class="col-md-12">
                 <hr>
-                <p class='text-muted'>Questions? Email <a href='mailto:<?php echo $helpemail;?>'><?php echo $helpcontact;?></a> or call <?php echo $helpphone;?>.</p>
+                <p class='text-muted'>Questions? Email <a href='mailto:<?php echo $helpemail;?>'><?php echo $helpcontact;?></a> or call <?php echo $helpphone;?>.
+                    <span class="text-muted small attribution" style="float:right;">Icons by <a href='http://www.glyphicons.com'>Glyphicons</a></span></p>
             </div>
         </div>
     </div>
