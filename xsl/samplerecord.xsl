@@ -7,8 +7,17 @@
                     <title><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:mods/mods:titleInfo[1]/mods:title[1]"/></title>
                     <url><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:url[@usage='primary display'][1]"/></url>
                     <thumburl><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:url[@access='preview'][1]"/></thumburl>
-                    <rights><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:accessCondition[1]"/></rights>
-                    <type><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:genre[1]"/></type>
+                    <rights><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:accessCondition[@type='use and reproduction'][1]"/></rights>
+                    <rightslocal>
+                      <xsl:for-each select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:accessCondition[@type='local rights statements']">
+                          <data><xsl:value-of select="current()"/></data>
+                      </xsl:for-each>
+                    </rightslocal>
+                    <format>
+                      <xsl:for-each select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:physicalDescription/mods:form">
+                          <data><xsl:value-of select="current()"/></data>
+                      </xsl:for-each>
+                    </format>
                     <description><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:note[@type='content'][1]"/></description>
                     <contributing_institution><xsl:value-of select="oai:OAI-PMH/oai:GetRecord/oai:record//mods:note[@type='ownership'][1]"/></contributing_institution>
                     <creator>

@@ -23,9 +23,9 @@
         <?php
         // include application-wide configuration options
        include('config.php');
-       
+
        // establish function to produce the date of next harvest
-       function nextDate($userDay) {      
+       function nextDate($userDay) {
             $today = date('d'); // today
             $target = date('Y-m-'.$userDay); // target day
             if($today <= $userDay) {
@@ -43,10 +43,10 @@
                         $thisMonth = 1;
                         $thisYear++;
                     }
-                }      
+                }
                 $return = strtotime($thisYear.'-'.$thisMonth.'-'.$userDay);
             }
-            return $return; 
+            return $return;
         }
 
         // establish function to get a list of all of a repository's sets
@@ -79,7 +79,7 @@
                 $setxml = new SimpleXMLElement($output);
                 return $setxml;
             } catch (Exception $e) {
-                
+
             }
         }
 
@@ -107,7 +107,7 @@
                 }
             }
         }
-        
+
         ?>
 
         <div class="container-fluid">
@@ -146,17 +146,17 @@
 
                                     <select class="form-control" id="setselect" name="set">
                                         <option value="">Select a Set</option>
-                                        
-                                        <?php 
+
+                                        <?php
                                         $prettysetarray= array();
                                         foreach ($setarray as $sethash) {
                                             $setparts = explode("|", $sethash);
                                             $prettysetarray[$setparts[1]] = $setparts[0];
-                                            
+
                                             ?>
 
                                             <option value="<?php echo $setparts[1]; ?>"><?php echo $setparts[0]; ?> (<?php echo $setparts[1]; ?>)</option>
-                                        
+
                                         <?php } ?>
 
                                     </select>
@@ -184,15 +184,22 @@
                         <?php } else { ?>
                 </div>
          </div>
-         <div class="row addpadding">
-                 <div class="col-md-12">
-                     
+
+
+
                 <?php
                 $setname = $prettysetarray[$set];
                 ?>
-                     
-                <h2>Analysis <span class="small text-muted"><?php echo $setname;?></span></h2>
+                <div class="row addpadding">
 
+                <div class="col-md-12">
+                <h2>Analysis <span class="small text-muted"><?php echo $setname;?></span></h2>
+                </div>
+
+                <!--<div class="col-md-6"><a class="margintop btn btn-default pull-right" href="tabdelim_data.php?set=<?php echo $set;?>">Download Original Data for Analysis</a></div>-->
+              </div>
+              <div class="row addpadding">
+                <div class="col-md-12">
                 <?php
                 $feedURL = $oaibaseurl . "?verb=ListRecords&set=" . $set . "&metadataPrefix=".$metadataprefix;
                 $recordxml = '';
@@ -258,6 +265,7 @@
                 $athumburl = array();
                 $adate = array();
                 $atype = array();
+                $arights = array();
                 foreach ($analysis->record as $arec) {
                     if (isset($arec->geo)) {
                         $ageo[] = (string) $arec->url . "||" . $arec->title . "||" . $arec->oai_id;
@@ -271,8 +279,11 @@
                     if (isset($arec->date)) {
                         $adate[] = (string) $arec->url . "||" . $arec->title. "||" . $arec->oai_id;
                     }
+                    if (isset($arec->rights)) {
+                        $arights[] = (string) $arec->url . "||" . $arec->title. "||" . $arec->oai_id;
+                    }
                 }
- 
+
                 ?>
                 <div class="panel-group" id="accordion">
 
@@ -295,11 +306,11 @@
                                             ?>
 
                                             <li>
-                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
+                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a>
                                                 <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
 
-                                        <?php } ?> 
+                                        <?php } ?>
                                     </ul>
                                 </div>
                             </div>
@@ -325,11 +336,11 @@
                                             ?>
 
                                             <li>
-                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
+                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a>
                                                 <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
-                                            
-                                             <?php } ?> 
+
+                                             <?php } ?>
                                     </ul>
                                 </div>
                             </div>
@@ -353,10 +364,10 @@
                                             ?>
 
                                            <li>
-                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
+                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a>
                                                 <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
-                                            <?php } ?> 
+                                            <?php } ?>
                                     </ul>
                                 </div>
                             </div>
@@ -380,35 +391,64 @@
                                             ?>
 
                                             <li>
-                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a> 
+                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a>
                                                 <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                             </li>
-                                            <?php } ?> 
+                                            <?php } ?>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <?php } ?>
+                        <?php } if (!empty($arights)) { ?>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                                    <?php echo count($arights); ?> records in this set are missing standard rights statements.
+                                    </a>
+                                    <a class="helpinfo" data-toggle="popover" data-content="DPLA is starting to require one of 12 standard rights statements (rightsstatements.org) on all submissions. Contact us with questions."><span class="glyphicon glyphicon-question-sign"></span></a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <ul>
+                                        <?php
+                                        foreach ($arights as $aitem) {
+                                            $aitemparts = explode("||", $aitem);
+                                            ?>
+
+                                            <li>
+                                                <a target="_blank" href="<?php echo $aitemparts[0]; ?>"><?php echo $aitemparts[1]; ?></a>
+                                                <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $aitemparts[2];?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
+                                            </li>
+                                            <?php } ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <?php }  ?>
                 </div>
 
-                <?php if(empty($adate)&&empty($ageo)&&empty($athumburl)&&empty($atype)) { ?>
+                <?php if(empty($adate)&&empty($ageo)&&empty($athumburl)&&empty($atype)&&empty($arights)) { ?>
 
                 <h4 class="text-muted"><em>Records are complete. No missing data!</em></h4>
-                
+
                 <?php } } } } ?>
+
+
 
                </div>
         </div>
 
         <?php if(!empty($set)) { ?>
-        
+
             <div class="row addpadding">
                 <div class="col-md-12">
                 <hr>
                 </div>
             </div>
             <iframe scrolling="no" id="samplerecordframe" src="samplerecord.php?dataprovider=<?php echo $dataprovider;?>&set=<?php echo $set;?>"></iframe>
-        
+
         <?php } ?>
         <div class="row addpadding">
             <div class="col-md-12">
@@ -417,7 +457,7 @@
             </div>
         </div>
     </div>
-       
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -429,7 +469,7 @@
             placement: 'right',
             container: 'body'
         });
-        
+
         // resize iframe to fit content
         $("#samplerecordframe").load(function() {
             $(this).height( $(this).contents().find("body").height() );

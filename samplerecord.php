@@ -19,21 +19,21 @@
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body>                  
-        
+    <body>
+
         <div class="container-fluid">
-        
+
           <?php
           // include application-wide config information
           include('config.php');
-          
+
           // make sure set information is present
           $set = isset($_GET['set']) ? $_GET['set'] : '';
-          
+
           if(empty($set)){
               // do nothing
           } else {
-          
+
 
             $listidurl = $oaibaseurl."?verb=ListIdentifiers&set=".$set."&metadataPrefix=".$metadataprefix;
             $idarray = '';
@@ -130,7 +130,6 @@
             $url = isset($samplearray->url) ? $samplearray->url : '';
             $thumburl = !empty($samplearray->thumburl) ? $samplearray->thumburl : 'img/thumbnail.png';
             $rights = isset($samplearray->rights) ? $samplearray->rights : '';
-            $type = isset($samplearray->type) ? $samplearray->type : '';
             $description = isset($samplearray->description) ? $samplearray->description : '';
             $contributing_institution = isset($samplearray->contributing_institution) ? $samplearray->contributing_institution : '';
 
@@ -140,10 +139,12 @@
             $publisher = isset($samplearray->publisher->data) ? $samplearray->publisher->data : array();
             $location = isset($samplearray->location->data) ? $samplearray->location->data : array();
             $subject = isset($samplearray->subject->data) ? $samplearray->subject->data : array();
-           
+            $rightslocal = isset($samplearray->rightslocal->data) ? $samplearray->rightslocal->data : array();
+            $format = isset($samplearray->format->data) ? $samplearray->format->data : array();
+
         ?>
                         <div class="row">
-                            <div class="col-md-6"><h2>Sample Record 
+                            <div class="col-md-6"><h2>Sample Record
                                     <span class="small">
                                         <a class="helpinfo" data-toggle="popover" data-content="This is an example of how your content will appear on the DPLA's web site.">
                                             <span class="glyphicon glyphicon-question-sign"></span>
@@ -168,57 +169,63 @@
                                                         <tr><th>Creator</th><td><?php foreach( $creator as $singlecreator) { echo $singlecreator."<br/>"; };?></td></tr>
 
                                                         <?php } ?>
-                                                        
+
                                                         <?php if(!empty($date)) { ?>
                                                         <!--<tr><th>Created Date</th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>-->
                                                         <tr><th>Created Date  <a class="helpinfo text-muted" data-toggle="popover" data-content="The DPLA will attempt to normalize dates as records are harvested.">
                                                         <span class="glyphicon glyphicon-question-sign"></span>
                                                         </a></th><td><?php foreach( $date as $singledate) { echo $singledate."<br/>"; };?></td></tr>
                                                         <?php } ?>
-                                                        
+
                                                         <?php if($provider!=='') { ?>
                                                         <tr><th>Partner</th><td><?php echo $provider;?></td></tr>
                                                         <?php } ?>
-                                                        
+
                                                         <?php if((string) $contributing_institution!=='') { ?>
                                                         <tr><th>Contributing Institution</th><td><?php echo $contributing_institution;?></td></tr>
                                                         <?php } ?>
-                                                        
+
                                                         <?php if(!empty($publisher)) { ?>
                                                         <tr><th>Publisher</th><td><?php foreach( $publisher as $singlepub) { echo $singlepub."<br/>"; };?></td></tr>
                                                         <?php } ?>
-                                                        
+
                                                         <?php if((string) $description!=='') { ?>
                                                         <tr><th>Description</th><td><?php echo $description;?></td></tr>
                                                         <?php } ?>
-                                                        
+
                                                         <?php if(!empty($location)) { ?>
                                                         <tr><th>Location  <a class="helpinfo text-muted" data-toggle="popover" data-content="The DPLA will attempt to normalize/geocode locations as records are harvested.">
                                             <span class="glyphicon glyphicon-question-sign"></span>
                                         </a></th><td><?php foreach( $location as $singleloc) { echo $singleloc."<br/>"; };?></td></tr>
                                                         <?php } ?>
-                                                        
-                                                        <?php if((string) $type!=='') { ?>
-                                                        <tr><th>Type</th><td><?php echo $type;?></td></tr>
+
+                                                        <?php if(!empty($format)) { ?>
+                                                        <tr><th>Format</th><td><?php foreach( $format as $singleform) { echo $singleform."<br/>"; };?></td></tr>
                                                         <?php } ?>
-                                                        
+
+
                                                         <?php if(!empty($subject)) { ?>
                                                         <tr><th>Subject</th><td><?php foreach( $subject as $singlesub) { echo $singlesub."<br/>"; };?></td></tr>
                                                         <?php } ?>
-                                                        
+
+
                                                         <?php if((string) $rights!=='') { ?>
-                                                        <tr><th>Rights</th><td><?php echo $rights;?></td></tr>
+                                                        <tr><th>Rights (Standard)</th><td><a href="<?php echo $rights;?>"><?php echo $rights;?></a></td></tr>
                                                         <?php } ?>
-                                                        
+
+                                                        <?php if(!empty($rightslocal)) { ?>
+                                                        <tr><th>Rights (Local)</th><td><?php foreach( $rightslocal as $singlerl) { echo $singlerl."<br/>"; };?></td></tr>
+                                                        <?php } ?>
+
                                                         <?php if((string) $url!=='') { ?>
-                                                        <tr><th>URL</th><td><a target="_blank" href="<?php echo $url;?>"><?php echo $url;?></a> 
+                                                        <tr><th>URL</th><td><a target="_blank" href="<?php echo $url;?>"><?php echo $url;?></a>
                                                        <a class="oailink" target="_blank" href="viewoai.php?identifier=<?php echo $sampleid;?>&set=<?php echo $set;?>"><span class="small text-muted glyphicon glyphicon-eye-open"></span></a>
                                                          </td></tr>
                                                         <?php } ?>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                          
+
                                         </div>
                                     </div>
                                 </div>
