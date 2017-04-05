@@ -11,7 +11,7 @@ Included is an OAI proxy viewer. This is useful if the repository itself is clos
 Version
 -------
 
-1.0
+1.1
 
 Technology
 ----------
